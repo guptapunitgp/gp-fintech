@@ -35,6 +35,8 @@
 
 // export default app;
 
+
+
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
@@ -43,12 +45,14 @@ import aiRoutes from './routes/aiRoutes.js';
 import stockRoutes from './routes/stockRoutes.js';
 import transactionRoutes from './routes/transactionRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import { env } from './config/env.js';
 
 const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: env.clientUrl || "*",
+    credentials: true,
   }),
 );
 

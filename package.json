@@ -1,0 +1,11 @@
+{
+  "name": "finance-dashboard-workspace",
+  "private": true,
+  "scripts": {
+    "dev:client": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
+    "preview:client": "npm run preview --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "start:server": "npm run start --prefix server"
+  }
+}

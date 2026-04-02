@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply min-h-screen bg-white text-slate-900 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  }
+
+  .dashboard-shell {
+    @apply min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.1),_transparent_22%),linear-gradient(180deg,_rgba(255,255,255,1)_0%,_rgba(255,255,255,1)_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.18),_transparent_20%),linear-gradient(180deg,_rgba(2,6,23,1)_0%,_rgba(15,23,42,1)_100%)];
+  }
+
+  .panel {
+    @apply rounded-[28px] border border-slate-200/80 bg-white shadow-panel backdrop-blur transition-all duration-300 dark:border-slate-800/80 dark:bg-slate-900/80;
+  }
+
+  .subtle-panel {
+    @apply rounded-3xl border border-slate-200/80 bg-white shadow-[0_20px_45px_-30px_rgba(15,23,42,0.18)] backdrop-blur transition-all duration-300 dark:border-slate-800 dark:bg-slate-900/70;
+  }
+
+  .sidebar-panel {
+    @apply rounded-[32px] border border-slate-200/80 bg-white p-5 shadow-[0_30px_80px_-45px_rgba(15,23,42,0.22)] backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/90;
+  }
+
+  .navbar-panel {
+    @apply rounded-[28px] border border-slate-200/80 bg-white px-5 py-4 shadow-[0_20px_55px_-38px_rgba(15,23,42,0.2)] backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70;
+  }
+
+  .field {
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition duration-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-brand-500/20;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_16px_30px_-18px_rgba(15,23,42,0.55)] transition duration-200 hover:-translate-y-0.5 hover:bg-brand-600 dark:bg-brand-500 dark:text-white dark:hover:bg-brand-600;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-brand-500 dark:hover:text-brand-300;
+  }
+
+  .nav-pill {
+    @apply flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-500 transition duration-200 hover:-translate-y-0.5 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white;
+  }
+
+  .nav-pill-active {
+    @apply bg-slate-950 text-white shadow-[0_16px_28px_-18px_rgba(15,23,42,0.8)] dark:bg-brand-500;
+  }
+
+  .metric-card {
+    @apply panel relative overflow-hidden p-5 sm:p-6;
+  }
+
+  .metric-orb {
+    @apply absolute -right-10 top-1 h-28 w-28 rounded-full blur-2xl transition duration-300 group-hover:scale-110;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-slate-950 dark:text-white;
+  }
+
+  .section-copy {
+    @apply mt-1 text-sm text-slate-500 dark:text-slate-400;
+  }
+}

@@ -1,4 +1,70 @@
-import { createAiTextResponse, isOpenAiConfigured } from '../utils/openai.js';
+import {
+  createAiTextResponse,
+  isOpenAiConfigured,
+  OpenAiQuotaError,
+} from '../utils/openai.js';
+
+function buildFinanceFallback({ profile, transactions, portfolio, question }) {
+  const monthlyIncome = Number(profile?.monthlyIncome || 0);
+  const totalIncome = transactions
+    .filter((transaction) => transaction.type === 'income')
+    .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
+  const totalExpenses = transactions
+    .filter((transaction) => transaction.type === 'expense')
+    .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
+  const effectiveIncome = monthlyIncome || totalIncome;
+  const savingsRate = effectiveIncome > 0
+    ? Math.round(((effectiveIncome - totalExpenses) / effectiveIncome) * 100)
+    : 0;
+  const topExpense = transactions
+    .filter((transaction) => transaction.type === 'expense')
+    .reduce((accumulator, transaction) => {
+      const next = { ...accumulator };
+      next[transaction.category] = (next[transaction.category] || 0) + Number(transaction.amount || 0);
+      return next;
+    }, {});
+  const topExpenseEntry = Object.entries(topExpense).sort((left, right) => right[1] - left[1])[0];
+  const portfolioProfit = portfolio.reduce((sum, item) => sum + Number(item.profit || 0), 0);
+
+  return [
+    `Live OpenAI help is temporarily unavailable because the API quota has been exhausted.`,
+    '',
+    `Quick dashboard-based guidance for your question: "${String(question || '').trim()}"`,
+    `- Total expenses tracked: ${totalExpenses.toFixed(0)}`,
+    `- Estimated savings rate: ${savingsRate}%`,
+    `- Highest expense category: ${topExpenseEntry ? `${topExpenseEntry[0]} (${topExpenseEntry[1].toFixed(0)})` : 'No expense data yet'}`,
+    `- Portfolio status: ${portfolioProfit >= 0 ? 'in profit' : 'in loss'} by ${Math.abs(portfolioProfit).toFixed(0)}`,
+    '',
+    `Suggested next step: review the largest expense category first, set one spending cap for the next 7 days, and compare your cash outflow against monthly income before adding new investments.`,
+    '',
+    `Educational note: this fallback is rule-based and not financial advice.`,
+  ].join('\n');
+}
+
+function buildStockFallback(stock) {
+  const currentPrice = Number(stock?.currentPrice || 0);
+  const movingAverage = Number(stock?.movingAverage || 0);
+  const trend = stock?.trend || 'Stable';
+  const volatility = stock?.volatility || 'Low';
+  const changePercent = Number(stock?.changePercent || 0);
+  const aboveAverage = currentPrice >= movingAverage;
+
+  return [
+    `Live OpenAI stock analysis is temporarily unavailable because the API quota has been exhausted.`,
+    '',
+    `Rule-based summary for ${stock?.symbol || 'this stock'}:`,
+    `- Current trend: ${trend}`,
+    `- Volatility: ${volatility}`,
+    `- Daily change: ${changePercent.toFixed(2)}%`,
+    `- Price vs moving average: ${aboveAverage ? 'above' : 'below'} the recent average`,
+    '',
+    `What to watch next:`,
+    `- If price stays above the moving average with controlled volatility, momentum is healthier.`,
+    `- If volatility rises while price slips below the moving average, risk is increasing.`,
+    '',
+    `Educational note: this fallback is for study only and not investment advice.`,
+  ].join('\n');
+}
 
 function buildFinanceSnapshot(profile, transactions, portfolio) {
   const income = transactions
@@ -96,6 +162,15 @@ export async function getFinanceAssistantResponse(request, response) {
       model: aiResponse.model,
     });
   } catch (error) {
+    if (error instanceof OpenAiQuotaError) {
+      return response.status(200).json({
+        answer: buildFinanceFallback(request.body),
+        model: 'local-fallback',
+        degraded: true,
+        message: error.message,
+      });
+    }
+
     return response.status(500).json({
       message: error.message || 'Unable to generate AI help right now.',
     });
@@ -129,6 +204,16 @@ export async function getStockAssistantResponse(request, response) {
       symbol: stockSnapshot.symbol,
     });
   } catch (error) {
+    if (error instanceof OpenAiQuotaError) {
+      return response.status(200).json({
+        answer: buildStockFallback(request.body.stock),
+        model: 'local-fallback',
+        symbol: request.body.stock?.symbol || '',
+        degraded: true,
+        message: error.message,
+      });
+    }
+
     return response.status(500).json({
       message: error.message || 'Unable to generate AI stock analysis right now.',
     });

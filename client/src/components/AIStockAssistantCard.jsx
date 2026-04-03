@@ -37,6 +37,11 @@ function AIStockAssistantCard({
           <StatePanel title="AI stock analysis unavailable" description={error} tone="danger" />
         ) : analysis?.answer ? (
           <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 text-sm leading-7 text-slate-700 shadow-[0_24px_50px_-40px_rgba(15,23,42,0.45)] dark:border-slate-700 dark:from-slate-900 dark:to-slate-950 dark:text-slate-200">
+            {analysis.message ? (
+              <div className="mb-3 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+                {analysis.message}
+              </div>
+            ) : null}
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               <span>{analysis.model}</span>
               <span className="text-slate-300 dark:text-slate-600">•</span>

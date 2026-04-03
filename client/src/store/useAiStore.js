@@ -6,6 +6,8 @@ export const useAiStore = create((set, get) => ({
   financeAnswer: '',
   financeQuestion: '',
   financeModel: '',
+  financeMessage: '',
+  financeDegraded: false,
   financeError: '',
   isLoadingFinanceHelp: false,
   stockAnalysisBySymbol: {},
@@ -39,6 +41,8 @@ export const useAiStore = create((set, get) => ({
       set({
         financeAnswer: data.answer,
         financeModel: data.model,
+        financeMessage: data.message || '',
+        financeDegraded: Boolean(data.degraded),
         isLoadingFinanceHelp: false,
       });
       return data;
@@ -78,6 +82,8 @@ export const useAiStore = create((set, get) => ({
           [symbol]: {
             answer: data.answer,
             model: data.model,
+            message: data.message || '',
+            degraded: Boolean(data.degraded),
             updatedAt: new Date().toISOString(),
           },
         },
@@ -100,6 +106,8 @@ export const useAiStore = create((set, get) => ({
       financeAnswer: '',
       financeQuestion: '',
       financeModel: '',
+      financeMessage: '',
+      financeDegraded: false,
       financeError: '',
       isLoadingFinanceHelp: false,
       stockAnalysisBySymbol: {},

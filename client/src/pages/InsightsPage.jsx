@@ -23,6 +23,8 @@ function InsightsPage() {
   const financeQuestion = useAiStore((state) => state.financeQuestion);
   const financeAnswer = useAiStore((state) => state.financeAnswer);
   const financeModel = useAiStore((state) => state.financeModel);
+  const financeMessage = useAiStore((state) => state.financeMessage);
+  const financeDegraded = useAiStore((state) => state.financeDegraded);
   const financeError = useAiStore((state) => state.financeError);
   const isLoadingFinanceHelp = useAiStore((state) => state.isLoadingFinanceHelp);
   const setFinanceQuestion = useAiStore((state) => state.setFinanceQuestion);
@@ -60,6 +62,8 @@ function InsightsPage() {
               question={financeQuestion}
               answer={financeAnswer}
               model={financeModel}
+              message={financeMessage}
+              degraded={financeDegraded}
               error={financeError}
               isLoading={isLoadingFinanceHelp}
               onQuestionChange={setFinanceQuestion}

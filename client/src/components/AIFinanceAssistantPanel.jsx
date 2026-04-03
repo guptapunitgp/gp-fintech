@@ -11,6 +11,8 @@ function AIFinanceAssistantPanel({
   question,
   answer,
   model,
+  message,
+  degraded,
   isLoading,
   error,
   onQuestionChange,
@@ -40,7 +42,11 @@ function AIFinanceAssistantPanel({
           </p>
         </div>
         {model ? (
-          <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200">
+          <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+            degraded
+              ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300'
+              : 'border-brand-200 bg-brand-50 text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200'
+          }`}>
             {model}
           </span>
         ) : null}
@@ -86,6 +92,11 @@ function AIFinanceAssistantPanel({
           <StatePanel title="AI help unavailable" description={error} tone="danger" />
         ) : answer ? (
           <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 text-sm leading-7 text-slate-700 shadow-[0_24px_50px_-40px_rgba(15,23,42,0.45)] dark:border-slate-700 dark:from-slate-900 dark:to-slate-950 dark:text-slate-200">
+            {message ? (
+              <div className="mb-3 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+                {message}
+              </div>
+            ) : null}
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
               Response
             </p>

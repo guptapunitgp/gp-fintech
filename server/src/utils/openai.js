@@ -2,6 +2,14 @@ import { env } from '../config/env.js';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/responses';
 
+export class OpenAiQuotaError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'OpenAiQuotaError';
+    this.code = 'insufficient_quota';
+  }
+}
+
 function extractOutputText(payload) {
   if (payload.output_text) {
     return payload.output_text.trim();
@@ -54,7 +62,20 @@ export async function createAiTextResponse({ systemPrompt, userPrompt }) {
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(payload.error?.message || 'OpenAI request failed.');
+    const errorCode = payload.error?.code || '';
+    const errorMessage = payload.error?.message || 'OpenAI request failed.';
+
+    if (
+      response.status === 429 &&
+      (errorCode === 'insufficient_quota' ||
+        /exceeded your current quota/i.test(errorMessage))
+    ) {
+      throw new OpenAiQuotaError(
+        'OpenAI API quota is exhausted. Add billing or increase the project spend limit to re-enable live AI responses.',
+      );
+    }
+
+    throw new Error(errorMessage);
   }
 
   const text = extractOutputText(payload);

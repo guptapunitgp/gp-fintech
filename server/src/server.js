@@ -28,9 +28,9 @@ import { env } from './config/env.js';
 
 async function startServer() {
   try {
-    console.log("ENV CHECK:");
-    console.log("JWT:", env.jwtSecret);
-    console.log("MONGO:", env.mongoUri);
+    // console.log("ENV CHECK:");
+    // console.log("JWT:", env.jwtSecret);
+    // console.log("MONGO:", env.mongoUri);
 
     if (!env.jwtSecret) {
       console.warn("JWT_SECRET missing - using fallback");

@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import TransactionCsvControls from '../components/TransactionCsvControls';
 import TransactionsSection from '../components/TransactionsSection';
 import SectionHeader from '../components/common/SectionHeader';
 import StatePanel from '../components/common/StatePanel';
@@ -12,7 +12,12 @@ function TransactionsPage() {
   const transactions = useTransactionStore((state) => state.transactions);
   const filters = useTransactionStore((state) => state.filters);
   const isLoading = useTransactionStore((state) => state.isLoading);
+  const isUploadingCsv = useTransactionStore((state) => state.isUploadingCsv);
+  const isDownloadingCsv = useTransactionStore((state) => state.isDownloadingCsv);
+  const csvImportSummary = useTransactionStore((state) => state.csvImportSummary);
   const error = useTransactionStore((state) => state.error);
+  const uploadTransactionsCsv = useTransactionStore((state) => state.uploadTransactionsCsv);
+  const downloadTransactionsCsv = useTransactionStore((state) => state.downloadTransactionsCsv);
   const openCreateTransaction = useUiStore((state) => state.openCreateTransaction);
   const visibleTransactions = getVisibleTransactions(transactions, filters);
 
@@ -22,14 +27,16 @@ function TransactionsPage() {
         eyebrow="Transactions"
         title="Manage transaction history"
         description="Search, filter, sort, and maintain every income and expense entry from a single workspace."
-        action={
-          role === 'admin' ? (
-            <button type="button" onClick={openCreateTransaction} className="btn-primary gap-2">
-              <Plus size={16} />
-              New transaction
-            </button>
-          ) : null
-        }
+        action={null}
+      />
+      <TransactionCsvControls
+        role={role}
+        isUploading={isUploadingCsv}
+        isDownloading={isDownloadingCsv}
+        csvImportSummary={csvImportSummary}
+        onUpload={uploadTransactionsCsv}
+        onDownload={downloadTransactionsCsv}
+        onOpenCreate={openCreateTransaction}
       />
       {isLoading ? (
         <StatePanel

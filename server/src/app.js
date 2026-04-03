@@ -49,10 +49,43 @@ import { env } from './config/env.js';
 
 const app = express();
 
+const defaultAllowedOrigins = [
+  'http://localhost:5173',
+  'https://gp-fintech.vercel.app',
+];
+
+const allowedOrigins = new Set([
+  ...defaultAllowedOrigins,
+  ...(env.clientUrls || []),
+].map((origin) => origin.replace(/\/$/, '')));
+
+function isAllowedOrigin(origin) {
+  if (!origin) {
+    return true;
+  }
+
+  const normalizedOrigin = origin.replace(/\/$/, '');
+
+  if (allowedOrigins.has(normalizedOrigin)) {
+    return true;
+  }
+
+  return /^https:\/\/gp-fintech(?:-[a-z0-9-]+)*\.vercel\.app$/i.test(normalizedOrigin);
+}
+
 app.use(
   cors({
-    origin: env.clientUrl || "*",
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
 

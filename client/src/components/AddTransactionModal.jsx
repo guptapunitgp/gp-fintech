@@ -76,6 +76,7 @@ function AddTransactionModal() {
     }
 
     const payload = {
+      title: form.category.trim(),
       date: form.date,
       amount: Number(form.amount),
       category: form.category.trim(),
@@ -83,8 +84,10 @@ function AddTransactionModal() {
     };
 
     try {
-      if (mode === 'edit' && transaction?.id) {
-        await updateTransaction(transaction.id, payload);
+      const transactionId = transaction?._id ?? transaction?.id;
+
+      if (mode === 'edit' && transactionId) {
+        await updateTransaction(transactionId, payload);
       } else {
         await createTransaction(payload);
       }

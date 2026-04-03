@@ -27,8 +27,8 @@ function escapeCsvCell(value) {
 }
 
 export function validateTransactionRow(rawRow, index) {
-  const title = sanitizeText(rawRow.title);
   const category = sanitizeText(rawRow.category);
+  const title = sanitizeText(rawRow.title) || category;
   const type = sanitizeText(rawRow.type).toLowerCase();
   const amount = parseAmount(rawRow.amount);
   const parsedDate = parseDateValue(rawRow.date);
@@ -36,7 +36,7 @@ export function validateTransactionRow(rawRow, index) {
   const rowErrors = [];
 
   if (!title) {
-    rowErrors.push(`Row ${rowNumber}: title is required.`);
+    rowErrors.push(`Row ${rowNumber}: title is required. Add a title column or provide a category value to reuse as the title.`);
   }
 
   if (!Number.isFinite(amount) || amount <= 0) {

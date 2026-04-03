@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { isFirebaseConfigured, signInWithGooglePopup } from '../../lib/firebase';
+import {
+  isFirebaseConfigured,
+  missingFirebaseConfigKeys,
+  signInWithGooglePopup,
+} from '../../lib/firebase';
 
 function getFriendlyGoogleError(error) {
   const code = error?.code || '';
@@ -51,7 +55,13 @@ function GoogleAuthButton({
   if (!isFirebaseConfigured) {
     return (
       <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-        Add Firebase web config values in `client/.env` to enable Google authentication.
+        <p className="font-semibold">Firebase web config is missing.</p>
+        <p className="mt-1">
+          Add the required values in <span className="font-mono">client/.env</span> and restart the frontend.
+        </p>
+        <p className="mt-2 text-xs leading-6">
+          Missing: {missingFirebaseConfigKeys.join(', ')}
+        </p>
       </div>
     );
   }

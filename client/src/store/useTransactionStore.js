@@ -135,7 +135,10 @@ export const useTransactionStore = create((set, get) => ({
         if (response.status === 401 && typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('finance:unauthorized'));
         }
-        throw new Error(data.message || 'Unable to upload CSV.');
+        const detailedMessage = Array.isArray(data.errors) && data.errors.length
+          ? data.errors.join(' ')
+          : data.message;
+        throw new Error(detailedMessage || 'Unable to upload CSV.');
       }
 
       set({

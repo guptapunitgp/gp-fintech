@@ -46,6 +46,7 @@ export async function getTransactions(request, response) {
     const transactions = await Transaction.find({ userId: request.user._id }).sort({ date: -1 });
     return response.status(200).json(transactions);
   } catch (error) {
+    console.error('getTransactions error:', error);
     return response.status(500).json({ message: 'Unable to load transactions.' });
   }
 }
@@ -70,6 +71,7 @@ export async function createTransaction(request, response) {
 
     return response.status(201).json(transaction);
   } catch (error) {
+    console.error('createTransaction error:', error);
     return response.status(500).json({ message: 'Unable to create the transaction.' });
   }
 }
@@ -102,6 +104,7 @@ export async function updateTransaction(request, response) {
 
     return response.status(200).json(transaction);
   } catch (error) {
+    console.error('updateTransaction error:', error);
     return response.status(500).json({ message: 'Unable to update the transaction.' });
   }
 }
@@ -117,6 +120,7 @@ export async function deleteTransaction(request, response) {
 
     return response.status(200).json({ message: 'Transaction deleted successfully.' });
   } catch (error) {
+    console.error('deleteTransaction error:', error);
     return response.status(500).json({ message: 'Unable to delete the transaction.' });
   }
 }
@@ -167,6 +171,7 @@ export async function uploadTransactionsCsv(request, response) {
       errors,
     });
   } catch (error) {
+    console.error('uploadTransactionsCsv error:', error);
     return response.status(500).json({
       success: false,
       insertedCount: 0,
@@ -191,6 +196,7 @@ export async function downloadTransactionsCsv(request, response) {
 
     return response.status(200).send(csvContent);
   } catch (error) {
+    console.error('downloadTransactionsCsv error:', error);
     return response.status(500).json({ message: 'Unable to download transactions as CSV.' });
   }
 }
